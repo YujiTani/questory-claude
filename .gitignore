@@ -1,0 +1,50 @@
+# 環境変数ファイル
+.env
+*.env
+.env.*
+!.env.sample
+
+# データベースファイル
+/mysql/data/
+
+# Rails specific
+/railsAPI/log/*
+/railsAPI/tmp/*
+!/railsAPI/log/.keep
+!/railsAPI/tmp/.keep
+/railsAPI/.bundle
+/railsAPI/vendor/bundle
+/railsAPI/.byebug_history
+/railsAPI/config/master.key
+
+# Next.js specific
+/Next.js/.next/
+/Next.js/out/
+/Next.js/node_modules/
+/Next.js/.env*.local
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor directories and files
+.idea/
+*.swp
+*.swo
+*~
+.vscode/
+
+# ログファイル
+*.log
+
+# 一時ファイル
+*.tmp
+*.temp
+
+# docker関連
+docker-compose.override.yml

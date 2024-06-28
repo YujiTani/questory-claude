@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  db:
+    build: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+
+  api:
+    build: ./rails
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - ./rails:/app
+    depends_on:
+      - db
+    environment:
+      RAILS_ENV: ${RAILS_ENV:-development}
+      DATABASE_URL: mysql2://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
+
+  web:
+    build:
+      context: ./next
+      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+    volumes:
+      - ./next/my-app:/app
+      - /usr/app/node_modules
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    command: npm run dev
+    working_dir: /usr/app/my-app
+    tty: true
+    stdin_open: true
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+      - api
