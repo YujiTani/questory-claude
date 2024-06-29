@@ -32,7 +32,7 @@ services:
       context: ./next
       dockerfile: ${DOCKERFILE:-Dockerfile.dev}
     volumes:
-      - ./next/my-app:/app
+      - ./next/my-app:/usr/app/my-app
       - /usr/app/node_modules
     environment:
       - NODE_ENV=${NODE_ENV:-development}
