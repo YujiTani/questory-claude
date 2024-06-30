@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   scope '/api' do
     # 既存のルート設定
   end
+
+  get '/test500', to: 'application#test500'
 end

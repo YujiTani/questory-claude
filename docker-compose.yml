@@ -26,6 +26,8 @@ services:
       DATABASE_URL: mysql2://${MYSQL_USER}:${MYSQL_PASSWORD}@db/${MYSQL_DATABASE}
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
+    ports:
+      - "3000:3000"
 
   web:
     build:
@@ -40,6 +42,8 @@ services:
     working_dir: /usr/app/my-app
     tty: true
     stdin_open: true
+    ports:
+      - "3010:3000"
 
   nginx:
     build: ./nginx
