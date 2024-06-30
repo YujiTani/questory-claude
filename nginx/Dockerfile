@@ -10,6 +10,9 @@ RUN apk add --no-cache tzdata
 # Nginxの設定ファイルをコンテナにコピー
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# エラーページをコピー
+COPY /error_pages/ /var/www/html/error_pages/
+
 # その他の設定ファイルがある場合はここでコピー
 # 例: COPY conf.d/ /etc/nginx/conf.d/
 
