@@ -15,22 +15,30 @@ WORKDIR /app
 # Gemfile と Gemfile.lock をコピー
 COPY Gemfile Gemfile.lock ./
 
-# Bundlerをインストール
+# Bundlerをインストールし、development と test 環境の gem を除外する
+# 本番環境用の gem をインストールする
 # --jobs 4: 4つの並列ジョブでインストールを高速化
 # --retry 3: 失敗時に3回までリトライ
 RUN gem install bundler && \
+    bundle config set without 'development test' && \
     bundle install --jobs 4 --retry 3
 
 # アプリケーションのソースコードをコピー
 COPY . .
 
-# コンテナ起動時に実行するスクリプトをコピー
+# セキュリティ強化のため、非root権限のユーザー（appuser）を作成し、
+# アプリケーションディレクトリの所有者に設定します。
+# 以降の操作をこのユーザーで実行するように切り替える。
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
+
+# エントリーポイントスクリプトをコンテナにコピーし、実行権限を付与。
+# 起動時エントリーポイントとして設定。
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
-# Rails サーバーを起動
-CMD ["rails", "server", "-b", "0.0.0.0"]
+# Puma を使用して Rails サーバーを起動
+CMD ["bundle", "exec", "rails", "server", "-p", "3000"]
 
-# コンテナがリッスンするポート
 EXPOSE 3000
