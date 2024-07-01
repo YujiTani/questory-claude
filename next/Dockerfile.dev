@@ -1,13 +1,40 @@
-FROM node:18-alpine
-RUN ls -la
+# ビルドステージ
+FROM node:18-alpine AS builder
 
-ARG PACKAGES="alpine-sdk vim"
+# ビルド時のメモリ制限を緩和
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
-RUN apk update \
-  && apk upgrade \
-  && apk add --update --no-cache $PACKAGES
-
-WORKDIR /usr/app
+WORKDIR /app
 COPY package*.json ./
 RUN npm install
-CMD ["npm", "run", "dev", "-p", "3010"]
+COPY . .
+RUN npm run build
+
+# =============================
+
+# 実行ステージ
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app .
+
+# 実行時のメモリ制限を設定
+ENV NODE_OPTIONS="--max-old-space-size=512"
+
+CMD ["npm", "start"]
+
+# FROM node:18-alpine
+
+# ARG PACKAGES="alpine-sdk vim python3 make g++"
+
+# RUN apk update \
+#   && apk upgrade \
+#   && apk add --update --no-cache $PACKAGES
+
+# WORKDIR /usr/app
+# COPY package*.json ./
+# RUN npm install
+
+# # アプリケーションのソースコードをコピー
+# COPY . .
+
+# CMD ["npm", "run", "dev", "-p", "3010"]

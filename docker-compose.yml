@@ -13,6 +13,10 @@ services:
       - ./mysql/init:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
   api:
     build: ./rails
@@ -28,6 +32,10 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
     ports:
       - "3000:3000"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   web:
     build:
@@ -44,6 +52,10 @@ services:
     stdin_open: true
     ports:
       - "3010:3010"
+    deploy:
+      resources:
+        limits:
+          memory: 384M
 
   nginx:
     build: ./nginx
@@ -52,3 +64,7 @@ services:
     depends_on:
       - web
       - api
+    deploy:
+      resources:
+        limits:
+          memory: 64M
