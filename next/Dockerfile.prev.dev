@@ -1,0 +1,16 @@
+FROM node:18-alpine
+
+ARG PACKAGES="alpine-sdk vim python3 make g++"
+
+RUN apk update \
+  && apk upgrade \
+  && apk add --update --no-cache $PACKAGES
+
+WORKDIR /usr/app
+COPY package*.json ./
+RUN npm install
+
+# アプリケーションのソースコードをコピー
+COPY . .
+
+CMD ["npm", "run", "dev", "-p", "3010"]
