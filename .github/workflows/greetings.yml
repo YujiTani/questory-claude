@@ -1,7 +1,6 @@
 name: Greetings
-
 on:
-  workflow_dispatch
+  workflow_dispatch:
     inputs:
       greeting:
         type: string
@@ -13,4 +12,4 @@ jobs:
   greeting:
     runs-on: ubuntu-latest
     steps:
-    - run: echo "${{ inputs.greeting }}" 
+      - run: echo "${{ inputs.greeting }}"
