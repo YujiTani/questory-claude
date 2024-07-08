@@ -1,0 +1,9 @@
+name: schedule
+on:
+  schedule: # 定期実行イベント
+    - cron: "*/15 * * * *" # cronで記述, 15分ごとに実行
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - run: date
