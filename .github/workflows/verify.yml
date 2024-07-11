@@ -8,7 +8,7 @@ on:
 
 jobs:
   verify-nexts:
-    if: contains(github.event.head_commit.modified, 'next/my-app/**') || contains(github.event.pull_request.title, '[Next]')
+    if: contains(github.event.head_commit.modified, 'next/') || contains(github.event.pull_request.title, '[Next]')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -24,7 +24,7 @@ jobs:
         run: echo "npm run test テストを作成後はここに記述"
 
   verify-rails:
-    if: contains(github.event.head_commit.modified, 'rails/app/**/') || contains(github.event.pull_request.title, '[Rails]')
+    if: contains(github.event.head_commit.modified, 'rails/') || contains(github.event.pull_request.title, '[Rails]')
     runs-on: ubuntu-latest
     services:
       mysql:

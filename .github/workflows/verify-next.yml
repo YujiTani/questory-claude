@@ -1,0 +1,31 @@
+name: Verify Next.js
+
+on:
+  push:
+    branches: [production, develop]
+    paths:
+      - "next/**"
+  pull_request:
+    branches: [production, develop]
+    paths:
+      - "next/**"
+
+jobs:
+  verify-next:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: |
+          cd next/my-app
+          npm ci
+      - name: Run test
+        run: |
+          cd next/my-app
+          echo "npm run test テストを作成後はここに記述"
