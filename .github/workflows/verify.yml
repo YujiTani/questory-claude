@@ -81,8 +81,8 @@ jobs:
       #     cd rails
       #     bin/rubocop --parallel
 
-  verify-nginx:
-    if: contains(github.event.head_commit.modified, 'nginx/') || contains(github.event.pull_request.title, '[Nginx]')
-    runs-on: ubuntu-latest
-    steps:
-      # Nginxのverifyを追加
+  # verify-nginx:
+  #   if: contains(github.event.head_commit.modified, 'nginx/') || contains(github.event.pull_request.title, '[Nginx]')
+  #   runs-on: ubuntu-latest
+  #   steps:
+  # Nginxのverifyを追加
