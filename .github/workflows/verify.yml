@@ -1,0 +1,88 @@
+name: Verify Code
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  verify-nexts:
+    if: contains(github.event.head_commit.modified, 'nexts/') || contains(github.event.pull_request.title, '[Nexts]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci # npm installよりも高速で、パッケージのバージョン管理を統一できる
+      - name: Run test
+        run: echo "npm run test テストを作成後はここに記述"
+
+  verify-rails:
+    if: contains(github.event.head_commit.modified, 'rails/') || contains(github.event.pull_request.title, '[Rails]')
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.2.0
+        ports:
+          - 3306:3306
+        env:
+          # sercrets環境変数をGitHubで管理する
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    env:
+      RAILS_ENV: test # railsをtest環境で実行
+      DATABASE_URL: mysql2://${{ secrets.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@127.0.0.1:3306/${{ secrets.MYSQL_DATABASE }}
+      SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.5
+          bundler-cache: true
+
+      - name: pwd
+        run: pwd
+
+      - name: ls -la
+        run: ls -la
+
+      # - name: Set up database schema
+      #   run: |
+      #     cd rails
+      #     bin/rails db:schema:load
+
+      # - name: Run tests
+      #   run: |
+      #     cd rails
+      #     bin/rake
+      # - name: Security audit dependencies
+      #   run: |
+      #     cd rails
+      #     bin/bundler-audit --update
+      # - name: Security audit application code
+      #   run: |
+      #     cd rails
+      #     bin/brakeman -q -w2
+      # - name: Lint Ruby files
+      #   run: |
+      #     cd rails
+      #     bin/rubocop --parallel
+
+  verify-nginx:
+    if: contains(github.event.head_commit.modified, 'nginx/') || contains(github.event.pull_request.title, '[Nginx]')
+    runs-on: ubuntu-latest
+    steps:
+      # Nginxのverifyを追加
