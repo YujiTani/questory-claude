@@ -17,6 +17,9 @@ jobs:
       run:
         working-directory: next/my-app
     steps:
+      - name: pwd
+        run: pwd
+
       - name: Checkout code
         uses: actions/checkout@v4
 
