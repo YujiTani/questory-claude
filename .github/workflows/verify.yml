@@ -2,9 +2,9 @@ name: Verify Code
 
 on:
   push:
-    branches: [main, develop]
+    branches: [production, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [production, develop]
 
 jobs:
   verify-nexts:
