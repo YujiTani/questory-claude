@@ -20,9 +20,6 @@ jobs:
       - name: Debug - Print current directory
         run: pwd
 
-      - name: Debug - List directory contents
-        run: ls -R
-
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,11 +27,15 @@ jobs:
           cache: npm
           cache-dependency-path: next/my-app/package-lock.json
 
+      - name: Output versions
+        run: |
+          node -v
+          npm -v
+
       - name: Install dependencies
         working-directory: next/my-app
         run: npm ci
 
       - name: Run test
         working-directory: next/my-app
-        run: |
-          echo "npm run test テストを作成後はここに記述"
+        run: npm run test
