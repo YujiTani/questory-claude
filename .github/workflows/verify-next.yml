@@ -10,9 +10,21 @@ on:
     paths:
       - "next/**"
 
+# パイプエラーが拾えるので、機会的に追加
+defaults:
+  run:
+    shell: bash
+
+# 同一グループのワークフローが多重起動しないように設定
+# 同プルリクエストで複数ワークフローが起動した場合に、古いワークフローをキャンセルする
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify-next:
     runs-on: ubuntu-latest
+    timeout-minutes: 5 # すべてのワークフローで書くと良い
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,3 +51,11 @@ jobs:
       - name: Run test
         working-directory: next/my-app
         run: npm run test
+
+      - name: Run TypeScript compiler
+        working-directory: next/my-app
+        run: npx tsc --noEmit
+
+      - name: Check formatting
+        working-directory: next/my-app
+        run: npx prettier --check .
