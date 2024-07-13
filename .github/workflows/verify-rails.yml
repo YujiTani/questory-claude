@@ -63,8 +63,11 @@ jobs:
 
       - name: Setup database
         run: |
+          echo "::group::Setup database"
+          echo "::debug::this is Debug"
           bundle exec rails db:create
           bundle exec rails db:schema:load
+          echo "::endgroup::"
 
       # - name: Install dependencies
       #   working-directory: next/my-app
