@@ -1,0 +1,83 @@
+name: Verify Ruby on Rails
+
+on:
+  push:
+    branches: [production, develop]
+    paths:
+      - "rails/**"
+  pull_request:
+    branches: [production, develop]
+    paths:
+      - "rails/**"
+  workflow_dispatch:
+
+# パイプエラーが拾えるので、機械的に追加
+defaults:
+  run:
+    shell: bash
+
+# 同一グループのワークフローが多重起動しないように設定
+# 同プルリクエストで複数ワークフローが起動した場合に、古いワークフローをキャンセルする
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-rails:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5 # すべてのワークフローで書くと良い
+    services:
+      mysql:
+        image: mysql:8.2.0
+        ports:
+          - 3306:3306
+        env:
+          # sercrets環境変数をGitHubで管理する
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    env:
+      RAILS_ENV: test # railsをtest環境で実行
+      DATABASE_URL: mysql2://${{ secrets.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@127.0.0.1:3306/${{ secrets.MYSQL_DATABASE }}
+      SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.5
+          bundler-cache: true
+
+      - name: Debug - Print current directory
+        run: pwd
+
+      - name: Output versions
+        run: |
+          ruby -v
+          bundler -v
+
+      - name: Setup database
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+
+      # - name: Install dependencies
+      #   working-directory: next/my-app
+      #   run: npm ci
+
+      # - name: Run test for changed files
+      #   working-directory: next/my-app
+      #   run: npm run test:changed
+
+      # - name: Run TypeScript compiler
+      #   working-directory: next/my-app
+      #   run: npm run lint
+
+      # - name: Check formatting
+      #   working-directory: next/my-app
+      #   run: npm run format
