@@ -8,7 +8,7 @@
     "start": "next start",
     "test": "vitest",
     "test:changed": "vitest --changed",
-    "test:all": "vitest --shuffle",
+    "test:all": "vitest --sequence.shuffle",
     "test:components": "vitest app/components",
     "test:hooks": "vitest app/hooks",
     "test:utils": "vitest app/utils",
