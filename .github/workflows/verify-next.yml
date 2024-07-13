@@ -11,7 +11,7 @@ on:
       - "next/**"
   workflow_dispatch:
 
-# パイプエラーが拾えるので、機会的に追加
+# パイプエラーが拾えるので、機械的に追加
 defaults:
   run:
     shell: bash
@@ -37,8 +37,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # cache: npm
-          # cache-dependency-path: next/my-app/package-lock.json
+          cache: npm
+          cache-dependency-path: next/my-app/package-lock.json
 
       - name: Output versions
         run: |
