@@ -7,8 +7,14 @@
     "build": "next build",
     "start": "next start",
     "test": "vitest",
+    "test:changed": "vitest --changed",
+    "test:all": "vitest --sequence.shuffle",
+    "test:components": "vitest app/components",
+    "test:hooks": "vitest app/hooks",
+    "test:utils": "vitest app/utils",
     "lint": "next lint",
-    "format": "prettier --write '**/*.{ts,tsx}'"
+    "format": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
   "dependencies": {
     "next": "14.2.4",

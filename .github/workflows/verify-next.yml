@@ -9,8 +9,9 @@ on:
     branches: [production, develop]
     paths:
       - "next/**"
+  workflow_dispatch:
 
-# パイプエラーが拾えるので、機会的に追加
+# パイプエラーが拾えるので、機械的に追加
 defaults:
   run:
     shell: bash
@@ -48,9 +49,9 @@ jobs:
         working-directory: next/my-app
         run: npm ci
 
-      - name: Run test
+      - name: Run test for changed files
         working-directory: next/my-app
-        run: npm run test
+        run: npm run test:changed
 
       - name: Run TypeScript compiler
         working-directory: next/my-app
