@@ -9,6 +9,7 @@ on:
     branches: [production, develop]
     paths:
       - "next/**"
+  workflow_dispatch:
 
 # パイプエラーが拾えるので、機会的に追加
 defaults:
