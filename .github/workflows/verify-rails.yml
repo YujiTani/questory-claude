@@ -47,14 +47,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: List directory contents
-        run: ls -R
-
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1.5
           bundler-cache: true
+          working-directory: ./rails
 
       - name: Debug - Print current directory
         run: pwd
