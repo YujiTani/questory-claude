@@ -47,15 +47,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug - Before setup-ruby
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Contents of current directory:"
+          ls -la
+          echo "Contents of rails directory:"
+          ls -la rails
+
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1.5
           bundler-cache: true
           working-directory: ./rails
-
-      - name: Debug - Print current directory
-        run: pwd
 
       - name: Output versions
         run: |
