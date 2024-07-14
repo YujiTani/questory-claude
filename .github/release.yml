@@ -1,12 +1,57 @@
 changelog:
   categories:
-    - title: Enhancements
+    - title: 🚀 Major Changes
       labels:
-        - enhancement
-    - title: Bug Fixes
-      labels:
-        - bug
-        - fixes
-    - title: Breaking Changes
-      labels:
+        - major
         - breaking-change
+    - title: 🎉 Minor Features
+      labels:
+        - minor
+        - feature
+        - enhancement
+    - title: 🐛 Patch Fixes
+      labels:
+        - patch
+        - bug
+        - fix
+    - title: 📚 Documentation
+      labels:
+        - documentation
+    - title: 🧪 Tests
+      labels:
+        - test
+    - title: 🛠 Maintenance
+      labels:
+        - chore
+        - maintenance
+    - title: 🔧 Build System & Dependencies
+      labels:
+        - build
+        - dependencies
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'breaking-change'
+  minor:
+    labels:
+      - 'minor'
+      - 'feature'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'patch'
+      - 'bug'
+      - 'fix'
+      - 'documentation'
+      - 'test'
+      - 'chore'
+      - 'maintenance'
+      - 'build'
+      - 'dependencies'
+  default: patch
+
+  exclude:
+    authors:
+      - dependabot
