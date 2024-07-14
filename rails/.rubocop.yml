@@ -1,0 +1,36 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.1
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'bin/**/*'
+    - 'vendor/**/*'
+
+# クラスやモジュールにドキュメンテーションコメントがない場合に警告
+Style/Documentation:
+  Enabled: true
+
+# メソッドの最大行数を設定
+Metrics/MethodLength:
+  Max: 15
+
+# ブロックの最大行数を設定
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+# 1行の最大文字数
+Layout/LineLength:
+  Max: 120
+
+# 文字列リテラルのクォートスタイルをシングルクォートに設定
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+# シンボルの配列の記法を設定、基本的な記法に制限
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/WordArray:
+  EnforcedStyle: brackets
