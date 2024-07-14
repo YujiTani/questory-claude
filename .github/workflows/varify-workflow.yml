@@ -39,6 +39,6 @@ jobs:
           ls -R ${{ github.workspace }}
 
       - name: Run actionlint
+        working-directory: ${{ github.workspace }}
         run: |
-          docker run --rm -v ${{ github.workspace }}:/repo -w /repo rhysd/actionlint:latest -color
-          working-directory: ${{ github.workspace }}
+          docker run --rm -v ${{ github.workspace }}:/repo rhysd/actionlint:latest -color
