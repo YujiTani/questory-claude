@@ -1,0 +1,8 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    # 毎日、毎週、毎月など細かく設定可能
+    schedule:
+      interval: weekly
+      day: monday
