@@ -1,5 +1,3 @@
-inherit_from: .rubocop_todo.yml
-
 require:
   - rubocop-rails
   - rubocop-rspec
@@ -67,6 +65,10 @@ Rails/FilePath:
 
 # モデルのバリデーションをスキップするメソッド（例：update_attribute, update_column, toggle! など）の使用をチェックしない
 Rails/SkipsModelValidations:
+  Enabled: false
+
+# ビュー関連の Cop を無効化
+Rails/ActionView:
   Enabled: false
 
 # API 特有のルールを強化
