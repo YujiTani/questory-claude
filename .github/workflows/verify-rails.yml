@@ -47,15 +47,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Debug - Before setup-ruby
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "Contents of current directory:"
-          ls -la
-          echo "Contents of rails directory:"
-          ls -la rails
-
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
@@ -71,11 +62,13 @@ jobs:
       - name: Setup database
         working-directory: ./rails
         run: |
-          echo "::group::Setup database"
-          echo "::debug::this is Debug"
           bundle exec rails db:create
           bundle exec rails db:schema:load
-          echo "::endgroup::"
+
+      - name: Run RSpec tests
+        working-directory: ./rails
+        run: |
+          bundle exec rspec
 
       # - name: Install dependencies
       #   working-directory: next/my-app
