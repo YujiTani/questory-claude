@@ -52,9 +52,7 @@ jobs:
         with:
           ruby-version: 3.1.5
           bundler-cache: true
-
-      - name: Debug - Print current directory
-        run: pwd
+          working-directory: ./rails
 
       - name: Output versions
         run: |
@@ -62,21 +60,19 @@ jobs:
           bundler -v
 
       - name: Setup database
+        working-directory: ./rails
         run: |
           bundle exec rails db:create
           bundle exec rails db:schema:load
 
-      # - name: Install dependencies
-      #   working-directory: next/my-app
-      #   run: npm ci
+      - name: Run RSpec tests
+        working-directory: ./rails
+        run: |
+          bundle exec rspec
 
       # - name: Run test for changed files
       #   working-directory: next/my-app
       #   run: npm run test:changed
-
-      # - name: Run TypeScript compiler
-      #   working-directory: next/my-app
-      #   run: npm run lint
 
       # - name: Check formatting
       #   working-directory: next/my-app

@@ -1,0 +1,44 @@
+name: Verify Workflow
+
+on:
+  push:
+    branches: [production, develop]
+    paths:
+      - ".github/workflows/**"
+  pull_request:
+    branches: [production, develop]
+    paths:
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: current directory
+        run: |
+          pwd
+          echo "current dierectory detail"
+          ls -la
+
+      - name: Run actionlint
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/repo -w /repo rhysd/actionlint:latest -color
+
+      - name: Debug Docker and actionlint
+        run: |
+          docker info
+          docker run --rm rhysd/actionlint:latest --version
+          docker run --rm -v ${{ github.workspace }}:/repo -w /repo rhysd/actionlint:latest ls -la /repo
