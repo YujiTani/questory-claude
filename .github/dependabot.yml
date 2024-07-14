@@ -1,8 +1,19 @@
 version: 2
 updates:
-  - package-ecosystem: github-actions
-    directory: /
-    # 毎日、毎週、毎月など細かく設定可能
+  # GitHub Actions の設定
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: weekly
-      day: monday
+      interval: "daily"
+
+  # Node.js (npm) の設定
+  - package-ecosystem: "npm"
+    directory: "/next"
+    schedule:
+      interval: "daily"
+
+  # Ruby (Bundler) の設定
+  - package-ecosystem: "bundler"
+    directory: "/rails"
+    schedule:
+      interval: "daily"
