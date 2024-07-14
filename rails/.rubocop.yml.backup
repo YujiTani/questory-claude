@@ -1,0 +1,76 @@
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-factory_bot
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.1
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'bin/**/*'
+    - 'vendor/**/*'
+
+# frozen_string_literal コメントを無効化
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# ドキュメンテーションコメントを必須としない
+Style/Documentation:
+  Enabled: false
+
+# メソッドの最大行数を増やす
+Metrics/MethodLength:
+  Max: 20
+
+# クラスの最大行数を設定
+Metrics/ClassLength:
+  Max: 200
+
+# モジュールの最大行数を設定
+Metrics/ModuleLength:
+  Max: 200
+
+# ブロックの最大行数を増やす
+Metrics/BlockLength:
+  Max: 50
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+
+# 1行の最大文字数
+Layout/LineLength:
+  Max: 120
+
+# 文字列リテラルのクォートスタイルをシングルクォートに設定
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+# シンボルの配列の記法を設定、基本的な記法に制限
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/WordArray:
+  EnforcedStyle: brackets
+
+# Rails 特有の設定
+Rails:
+  Enabled: true
+
+# ファイルパスの文字列の書き方をチェック
+Rails/FilePath:
+  # Rails.root.join('path', 'to', 'file') のような書き方を推奨
+  EnforcedStyle: arguments
+
+# モデルのバリデーションをスキップするメソッド（例：update_attribute, update_column, toggle! など）の使用をチェックしない
+Rails/SkipsModelValidations:
+  Enabled: false
+
+# ビュー関連の Cop を無効化
+Rails/ActionView:
+  Enabled: false
+
+# API 特有のルールを強化
+Rails/HttpStatus:
+  Enabled: true

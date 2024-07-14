@@ -25,7 +25,7 @@ concurrency:
 jobs:
   verify-rails:
     runs-on: ubuntu-latest
-    timeout-minutes: 5 # すべてのワークフローで書くと良い
+    timeout-minutes: 5
     services:
       mysql:
         image: mysql:8.2.0
@@ -70,12 +70,6 @@ jobs:
         run: |
           bundle exec rspec
 
-      # - name: Run test for changed files
-      #   working-directory: next/my-app
-      #   run: npm run test:changed
-
-      # - name: Check formatting
-      #   working-directory: next/my-app
-      #   run: npm run format
-
-      # workflowが正しくうごくか確認のための差分
+      - name: Run Rubocop
+        working-directory: ./rails
+        run: bundle exec rubocop
