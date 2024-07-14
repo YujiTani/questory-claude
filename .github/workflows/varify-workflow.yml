@@ -33,6 +33,11 @@ jobs:
           echo "current dierectory detail"
           ls -la
 
+      - name: Debug directory structure
+        run: |
+          pwd
+          ls -R ${{ github.workspace }}
+
       - name: Run actionlint
         run: |
           docker run --rm -v ${{ github.workspace }}:/repo -w /repo rhysd/actionlint:latest -color
