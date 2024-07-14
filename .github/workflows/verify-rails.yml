@@ -70,17 +70,9 @@ jobs:
         run: |
           bundle exec rspec
 
-      # - name: Install dependencies
-      #   working-directory: next/my-app
-      #   run: npm ci
-
       # - name: Run test for changed files
       #   working-directory: next/my-app
       #   run: npm run test:changed
-
-      # - name: Run TypeScript compiler
-      #   working-directory: next/my-app
-      #   run: npm run lint
 
       # - name: Check formatting
       #   working-directory: next/my-app
