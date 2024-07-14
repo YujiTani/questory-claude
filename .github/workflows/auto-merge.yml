@@ -19,11 +19,9 @@ jobs:
       # 開発者向けの依存関係の更新かつ、マイナーバージョンの更新でなければマージ
       # github_actionの更新かつ、マイナーバージョンの更新でなければマージ
       - if: >-
-          ${{ steps.meta.outputs.update-type == 'version-update:semver-patch' }}
-          ${{ steps.meta.outputs.dependency-type == 'direct:development' &&
-          steps.meta.outputs.update-type != 'version-update:semver-major' }}
-          ${{ steps.meta.outputs.package-ecosystem == 'github_actions' &&
-          steps.meta.outputs.update-type != 'version-update:semver-major' }}
+          steps.meta.outputs.update-type == 'version-update:semver-patch' ||
+          (steps.meta.outputs.dependency-type == 'direct:development' && steps.meta.outputs.update-type != 'version-update:semver-major') ||
+          (steps.meta.outputs.package-ecosystem == 'github_actions' && steps.meta.outputs.update-type != 'version-update:semver-major')
         # GITHUB_CLIでマージ ステータスチェック完了し、すべて成功している場合マージ
         run: |
           gh pr review "${GITHUB_HEAD_REF}" --approve
