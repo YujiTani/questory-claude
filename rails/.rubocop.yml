@@ -13,6 +13,8 @@ AllCops:
     - 'config/**/*'
     - 'bin/**/*'
     - 'vendor/**/*'
+  # 拡張機能を提案しない
+  SuggestExtensions: false
 
 # frozen_string_literal コメントを無効化
 Style/FrozenStringLiteralComment:
