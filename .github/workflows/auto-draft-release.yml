@@ -5,8 +5,8 @@ on:
     branches:
       # プロダクションブランチにプッシュされたときに実行
       - production
-  pull_request:
-    types: [opened, reopened, synchronize]
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited]
   workflow_dispatch:
 
 # パイプエラーが拾えるので、機械的に追加

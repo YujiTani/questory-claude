@@ -60,3 +60,7 @@ version-resolver:
 exclude:
   authors:
     - dependabot
+
+template: |
+  ## What's Changed
+  $CHANGES
