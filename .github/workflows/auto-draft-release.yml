@@ -1,0 +1,62 @@
+name: Auto Draft Release
+
+on:
+  push:
+    branches:
+      # プロダクションブランチにプッシュされたときに実行
+      - production
+  workflow_dispatch:
+
+# パイプエラーが拾えるので、機械的に追加
+defaults:
+  run:
+    shell: bash
+
+# 同一グループのワークフローが多重起動しないように設定
+# 同プルリクエストで複数ワークフローが起動した場合に、古いワークフローをキャンセルする
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# トークンのパーミッションを明示的に設定
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  draft-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          # すべての履歴を取得
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Auto-generate release notes
+        id: release
+        uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          config-name: release.yml
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.release.outputs.tag_name }}
+          release_name: Release ${{ steps.release.outputs.tag_name }}
+          body: ${{ steps.release.outputs.body }}
+          draft: true
+          prerelease: false
