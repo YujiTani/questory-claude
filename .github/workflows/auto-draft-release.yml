@@ -30,6 +30,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get latest release
+        id: get_latest_release
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "latest_tag=${latest_tag}" >> $GITHUB_OUTPUT
+
       - name: Auto-generate release notes
         id: release
         uses: release-drafter/release-drafter@v5
@@ -37,6 +48,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           config-name: release.yml
+          version: ${{ steps.get_latest_release.outputs.latest_tag }}
 
       - name: Create Release
         uses: actions/create-release@v1
