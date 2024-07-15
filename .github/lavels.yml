@@ -1,0 +1,61 @@
+# .github/labels.yml
+
+# Major Changes
+- name: major
+  color: 'FF4136'
+  description: Major changes that break backwards compatibility
+
+- name: breaking-change
+  color: 'B10DC9'
+  description: Changes that break existing functionality
+
+# Minor Features
+- name: minor
+  color: '0074D9'
+  description: New features which don't break existing functionality
+
+- name: feature
+  color: '7FDBFF'
+  description: New feature or request
+
+- name: enhancement
+  color: '2ECC40'
+  description: Improvement to existing features
+
+# Patch Fixes
+- name: patch
+  color: 'FFDC00'
+  description: Bug fixes and minor improvements
+
+- name: bug
+  color: 'FF851B'
+  description: Something isn't working as expected
+
+- name: fix
+  color: 'F012BE'
+  description: A fix for a reported issue
+
+# other
+- name: documentation
+  color: '01FF70'
+  description: Improvements or additions to documentation
+
+- name: test
+  color: 'AAAAAA'
+  description: Adding or refactoring tests
+
+- name: chore
+  color: 'DDD'
+  description: Maintenance tasks and minor updates
+
+- name: maintenance
+  color: '3D9970'
+  description: Repository maintenance tasks
+
+- name: build
+  color: 'B10DC9'
+  description: Changes that affect the build system or external dependencies
+
+- name: dependencies
+  color: '85144b'
+  description: Updates to dependencies
