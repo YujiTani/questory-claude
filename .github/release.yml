@@ -1,3 +1,6 @@
+# リリースノートの自動生成用ファイル
+# https://github.com/lerna/lerna/tree/main/packages/lerna-changelog
+# 付与されているラベルで、区分する
 changelog:
   categories:
     - title: 🚀 Major Changes
@@ -29,6 +32,7 @@ changelog:
         - build
         - dependencies
 
+# バージョン管理の設定
 version-resolver:
   major:
     labels:
@@ -52,6 +56,7 @@ version-resolver:
       - 'dependencies'
   default: patch
 
-  exclude:
-    authors:
-      - dependabot
+# 除外するユーザー
+exclude:
+  authors:
+    - dependabot
