@@ -1,0 +1,28 @@
+name: DockerHub Push
+on:
+  push:
+    branches:
+      - prodaction
+  workflow_dispatch:
+
+# パイプエラーが拾えるので、機械的に追加
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10 # ジョブがタイムアウトするまでの時間
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: current directory
+        run: |
+          pwd
+          ls -R

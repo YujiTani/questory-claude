@@ -15,6 +15,7 @@ services:
       - "3306:3306"
 
   api:
+    image: ${DOCKER_REGISTRY}/${API_IMAGE_NAME}:${API_TAG}
     build: ./rails
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
@@ -30,16 +31,17 @@ services:
       - "3000:3000"
 
   web:
+    image: ${DOCKER_REGISTRY}/${WEB_IMAGE_NAME}:${WEB_TAG}
     build:
       context: ./next
       dockerfile: ${DOCKERFILE:-Dockerfile.dev}
     volumes:
-      - ./next/my-app:/usr/app/my-app
+      - ./next:/usr/app
       - /usr/app/node_modules
     environment:
       - NODE_ENV=${NODE_ENV:-development}
     command: npm run dev -- -p 3010
-    working_dir: /usr/app/my-app
+    working_dir: /usr/app
     tty: true
     stdin_open: true
     ports:
