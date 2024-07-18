@@ -1,33 +1,65 @@
-# ビルドサイズ最適化するため、マルチステージでビルドする
-
-# ベースイメージとして、Node.js 18のAlpineバージョンを使用
-# ビルドステージ
+# ベースステージ: すべてのステージで共通して使用する基本イメージ
 FROM node:18-alpine AS base
+WORKDIR /app
+RUN echo "Base stage directory content:" && ls -la
 
-# アプリケーションのディレクトリを設定
-WORKDIR /usr/app
-
-# package.jsonとpackage-lock.jsonをコピー
+# 依存関係インストールステージ: npmパッケージをインストールする
+# libc6-compatを追加: Alpine Linuxで一部のnpmパッケージを正常に動作させるために必要
+# package.jsonとpackage-lock.jsonをコピー: 依存関係の情報のみをコピーし、ソースコードの変更による不要なキャッシュ無効化を防ぐ
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 COPY package*.json ./
+RUN npm ci
+RUN echo "Deps stage directory content:" && ls -la
 
-# メモリ消費を緩和するため分割して、インストール
-RUN npm install react react-dom next
-RUN npm install --save-dev typescript @types/node @types/react @types/react-dom
-RUN npm install --save-dev postcss tailwindcss
-RUN npm install --save-dev eslint eslint-config-next
-
+# ビルダーステージ: アプリケーションをビルドする
+# 依存関係をコピー: 前のステージでインストールしたnode_modulesをコピー
+# ビルドを実行: Next.jsアプリケーションをビルド
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN npm run build
+RUN echo "Builder stage directory content:" && ls -la
+RUN echo "Builder stage .next directory content:" && ls -la .next
 
-CMD ["npm", "run", "build"]
+# ランナーステージ: 実際にアプリケーションを実行する最終的なイメージ
+FROM base AS runner
+WORKDIR /app
 
+# 本番環境フラグ: ビルド時に環境を指定するための引数（デフォルトは開発環境）
+ARG NODE_ENV=false
+ENV NODE_ENV=${NODE_ENV}
 
-# ====================
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY package.json next.config.mjs ./
 
-# 実行用のステージ
-FROM node:18-alpine
-WORKDIR /usr/app
+RUN echo "Runner stage directory content:" && ls -la
+RUN echo "Runner stage node_modules/.bin content:" && ls -la node_modules/.bin
+ENV PATH /app/node_modules/.bin:$PATH
 
-# ビルドしたアプリケーションをコピー
-COPY --from=base /usr/app .
+EXPOSE 3010
 
-CMD ["npm", "run", "dev", "-p", "3010"]
+# 起動コマンド: 環境に応じて適切な起動コマンドを選択
+# - 本番環境（NODE_ENV=production）: npm start を使用
+# - 開発環境: npm run dev を使用
+# この条件分岐により、1つのDockerfileで両環境に対応可能
+
+CMD if [ "$NODE_ENV" = "production" ] ; \
+  then npm run start -- -p 3010 ; \
+  else npm run dev -- -p 3010 ; \
+  fi
+
+# 注意点:
+# - 開発環境では、ボリュームマウントを使用してホットリロードを有効にすることを推奨
+# - 本番環境では、セキュリティ強化のため非rootユーザーの使用を検討
+# - 環境変数やシークレットは、実行時にコンテナに渡すことを推奨
+
+# デバッグ情報
+RUN echo "NODE_ENV=" $NODE_ENV
+RUN echo "Path:" $PATH
+RUN which node
+RUN which npm
+RUN which next

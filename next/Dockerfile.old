@@ -1,0 +1,32 @@
+# ビルドサイズ最適化するため、マルチステージでビルドする
+
+# ベースイメージとして、Node.js 18のAlpineバージョンを使用
+# ビルドステージ
+FROM node:18 AS builder
+
+# アプリケーションのディレクトリを設定
+WORKDIR /usr/app
+
+# package.jsonとpackage-lock.jsonをコピー
+COPY package*.json ./
+
+# 1レイヤーでのインストール
+# 不要なキャッシュを削除し、イメージサイズをさらに削減
+RUN npm install \
+  react react-dom next \
+  typescript @types/node @types/react @types/react-dom \
+  postcss tailwindcss \
+  eslint eslint-config-next \
+  && npm cache clean --force
+
+COPY . .
+
+# ====================
+# 実行ステージ
+FROM node:18-alpine
+WORKDIR /usr/app
+
+# ビルドしたアプリケーションをコピー
+COPY --from=builder /usr/app .
+
+CMD ["npm", "run", "dev", "-p", "3010"]
