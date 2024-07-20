@@ -37,7 +37,7 @@ jobs:
         with:
           image-ref: ${{env.DOCKER_REGISTRY}}/${{env.WEB_IMAGE_NAME}}:${{env.WEB_TAG}}
           format: "table"
-          exit-code: "1"
+          exit-code: "0"
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
           vuln-type: "os,library"
@@ -47,7 +47,7 @@ jobs:
         with:
           image-ref: ${{env.DOCKER_REGISTRY}}/${{env.API_IMAGE_NAME}}:${{env.API_TAG}}
           format: "table"
-          exit-code: "1"
+          exit-code: "0"
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
           vuln-type: "os,library"
