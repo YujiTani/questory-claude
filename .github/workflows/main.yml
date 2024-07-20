@@ -35,7 +35,7 @@ jobs:
       - name: Web Container Scan By Trivy Scan
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ${env.DOCKER_REGISTRY}/${env.WEB_IMAGE_NAME}:${env.WEB_TAG}
+          image-ref: ${{env.DOCKER_REGISTRY}}/${{env.WEB_IMAGE_NAME}}:${{env.WEB_TAG}}
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
@@ -45,7 +45,7 @@ jobs:
       - name: API Container Scan By Trivy Scan
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ${env.DOCKER_REGISTRY}/${env.API_IMAGE_NAME}:${env.API_TAG}
+          image-ref: ${{env.DOCKER_REGISTRY}}/${{env.API_IMAGE_NAME}}:${{env.API_TAG}}
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
