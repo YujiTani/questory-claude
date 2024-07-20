@@ -30,7 +30,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build image Dockerfile
-        run: bash run.sh dev build web api
+        # run: bash run.sh dev build web api
+        run: docker-compose build web api
 
       - name: Web Container Scan By Trivy Scan
         uses: aquasecurity/trivy-action@0.20.0
