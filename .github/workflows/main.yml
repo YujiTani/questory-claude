@@ -18,11 +18,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10 # ジョブがタイムアウトするまでの時間
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USER_NAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: current directory
+      - name: Build image Dockerfile
+        run: bash run.sh dev build web api
+
+      - name: Web Container Scan By Trivy Scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${DOCKER_REGISTRY}/${WEB_IMAGE_NAME}:${WEB_TAG}
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          severity: "HIGH,CRITICAL"
+          vuln-type: "os,library"
+
+      - name: API Container Scan By Trivy Scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${DOCKER_REGISTRY}/${API_IMAGE_NAME}:${API_TAG}
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          severity: "HIGH,CRITICAL"
+          vuln-type: "os,library"
+
+      - name: Push image to DockerHub
         run: |
-          pwd
-          ls -R
+          docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_PASSWORD }}
+          bash run.sh dev push web api
