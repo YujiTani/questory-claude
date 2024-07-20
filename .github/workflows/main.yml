@@ -18,9 +18,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10 # ジョブがタイムアウトするまでの時間
+    # 更新のたびに書き換える必要がある
     env:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USER_NAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      DOCKER_REGISTRY: yuzunosk55
+      WEB_IMAGE_NAME: questory-web
+      WEB_TAG: v1.0.2
+      API_IMAGE_NAME: questory-api
+      API_TAG: v1.0.1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,7 +35,7 @@ jobs:
       - name: Web Container Scan By Trivy Scan
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ${DOCKER_REGISTRY}/${WEB_IMAGE_NAME}:${WEB_TAG}
+          image-ref: ${env.DOCKER_REGISTRY}/${env.WEB_IMAGE_NAME}:${env.WEB_TAG}
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
@@ -41,7 +45,7 @@ jobs:
       - name: API Container Scan By Trivy Scan
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ${DOCKER_REGISTRY}/${API_IMAGE_NAME}:${API_TAG}
+          image-ref: ${env.DOCKER_REGISTRY}/${env.API_IMAGE_NAME}:${env.API_TAG}
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
@@ -50,5 +54,5 @@ jobs:
 
       - name: Push image to DockerHub
         run: |
-          docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_PASSWORD }}
+          docker login -u ${{ secrets.DOCKER_HUB_USER_NAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
           bash run.sh dev push web api

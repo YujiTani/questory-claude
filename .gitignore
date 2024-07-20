@@ -2,7 +2,7 @@
 .env
 *.env
 .env.*
-!.env.sample
+!.env.example
 
 # データベースファイル
 /mysql/data/
