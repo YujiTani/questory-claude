@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: next/my-app/package-lock.json
+          cache-dependency-path: next/package-lock.json
 
       - name: Output versions
         run: |
@@ -46,17 +46,17 @@ jobs:
           npm -v
 
       - name: Install dependencies
-        working-directory: next/my-app
+        working-directory: next
         run: npm ci
 
       - name: Run test for changed files
-        working-directory: next/my-app
+        working-directory: next
         run: npm run test:changed
 
       - name: Run TypeScript compiler
-        working-directory: next/my-app
+        working-directory: next
         run: npm run lint
 
       - name: Check formatting
-        working-directory: next/my-app
+        working-directory: next
         run: npm run format
