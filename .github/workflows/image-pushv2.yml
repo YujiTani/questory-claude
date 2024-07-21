@@ -19,6 +19,7 @@ env:
   DOCKER_REGISTRY: yuzunosk55
   WEB_IMAGE_NAME: questory-web
   API_IMAGE_NAME: questory-api
+  ACTIONS_STEP_DEBUG: true
 
 jobs:
   build-and-scan:
