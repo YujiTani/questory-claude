@@ -24,9 +24,19 @@ jobs:
   build-and-scan:
     runs-on: ubuntu-latest
     timeout-minutes: 10 # ジョブがタイムアウトするまでの時間
+
     strategy:
+      # コンテナの並列実行
       matrix:
-        service: [web, api]
+        include:
+          - service: web
+            context: ./next
+            dockerfile: ./next/Dockerfile
+
+          - service: api
+            context: ./rails
+            dockerfile: ./rails/Dockerfile
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,7 +59,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/${{ matrix.service == 'web' && env.WEB_IMAGE_NAME || env.API_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           cache-from: type=gha
@@ -67,8 +78,9 @@ jobs:
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
           vuln-type: "os,library"
+          output: trivy-results-${{ matrix.service }}.txt
 
       - name: Display Trivy scan results
         run: |
           echo "Scan results for ${{ matrix.service }}:"
-          cat trivy-results.txt
+          cat trivy-results-${{ matrix.service }}.txt
