@@ -71,7 +71,7 @@ jobs:
           outputs: type=docker
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@0.24.0
         with:
           image-ref: ${{ env.DOCKER_REGISTRY }}/${{ matrix.service == 'web' && env.WEB_IMAGE_NAME || env.API_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           format: "table"
