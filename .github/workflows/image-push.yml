@@ -33,7 +33,7 @@ jobs:
         run: DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose build web api
 
       - name: Web Container Scan By Trivy Scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.25.0
         with:
           image-ref: ${{env.DOCKER_REGISTRY}}/${{env.WEB_IMAGE_NAME}}:${{env.WEB_TAG}}
           format: "table"
@@ -43,7 +43,7 @@ jobs:
           vuln-type: "os,library"
 
       - name: API Container Scan By Trivy Scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.25.0
         with:
           image-ref: ${{env.DOCKER_REGISTRY}}/${{env.API_IMAGE_NAME}}:${{env.API_TAG}}
           format: "table"
